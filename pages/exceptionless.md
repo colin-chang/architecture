@@ -376,4 +376,6 @@ private async Task<string> RequestAsync(string url, object parameter, string met
 ```
 
 # 5. 本地部署
-http://www.cnblogs.com/uptothesky/p/5864863.html
+如果不想使用Exceptionless官网提供服务，也可以在本地部署服务器。部署步骤参考 https://github.com/exceptionless/Exceptionless/wiki/Self-Hosting
+
+> Exceptionless 官方文档 https://github.com/exceptionless/Exceptionless/wiki/Getting-Started
