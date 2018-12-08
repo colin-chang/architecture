@@ -1,6 +1,6 @@
 {
-    "title": "Linux入门",
-    "description": "Linux学习笔记",
+    "title": "分布式-软件架构",
+    "description": "拥抱分布式架构",
     "plugins": [
         "disqus",
         "-lunr", "-search", "search-plus",
@@ -25,7 +25,7 @@
             "shortName": "Idea"
         },
         "github": {
-            "url": "https://github.com/colin-chang/Linux"
+            "url": "https://github.com/colin-chang/distribution"
         },
         "prism": {
             "css": [
@@ -47,7 +47,7 @@
             }
         },
         "sitemap": {
-            "hostname": "https://colinchang.gitbook.io/linux/"
+            "hostname": "http://colin-chang.site/book/distribution"
         },
         "sharing": {
             "facebook": true,
