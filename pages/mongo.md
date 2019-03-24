@@ -275,7 +275,7 @@ https://github.com/colin-chang/MongoHelper/blob/master/ColinChang.MongoHelper.Te
 
 > 该帮助累已发布到Nuget
 
-```
+```sh
 # Package Manager
 Install-Package ColinChang.MongoHelper
 

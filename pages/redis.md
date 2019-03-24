@@ -231,7 +231,7 @@ https://github.com/colin-chang/RedisHelper/blob/master/ColinChang.RedisHelper.Te
 
 > 该帮助累已发布到Nuget
 
-```
+```sh
 # Package Manager
 Install-Package ColinChang.RedisHelper
 
