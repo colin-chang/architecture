@@ -265,9 +265,23 @@ await persons.FindAsync(new BsonDocument(), findOpt);
 ```
 
 ### 5.7 MongoHelper
-仿照关系型数据库中`SqlHelper`,我们可以将对Mongo的常用操作封装到一个`MongoHelper`中。
+仿照关系型数据库中`SqlHelper`,我们可以将对Mongo的常用操作封装到一个`MongoHelper`中,支持简单CRUD操作，包含分页、排序、大数量查询等常用功能。
 
-源码和使用方式已上传至Github: https://github.com/colin-chang/mongohelper
+代码已上传到Github，这里不再展开。
+https://github.com/colin-chang/mongohelper
+
+具体使用方式可以查看单元测试
+https://github.com/colin-chang/MongoHelper/blob/master/ColinChang.MongoHelper.Test/MongoHelperTest.cs
+
+> 该帮助累已发布到Nuget
+
+```
+# Package Manager
+Install-Package ColinChang.MongoHelper
+
+# .NET CLI
+dotnet add package ColinChang.MongoHelper
+```
 
 ## 6. Mongo优化
 ### 6.1 优化设计原则
