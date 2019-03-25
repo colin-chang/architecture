@@ -167,7 +167,7 @@ await pub.PublishAsync("channel1","message content");
 ```csharp
 //订阅
 var pub = ConnectionMultiplexer.Connect(connectionString).GetSubscriber();
-await pub.SubscribeAsync("channle1", (chn, msg) => Console.Writeline(msg));
+await pub.SubscribeAsync("channle1", (chn, msg) => Console.WriteLine(msg));
 ```
 发布订阅和List作队列使用，分别实现了发布订阅模式和生产者消费者模式，可以作轻量级消息队列使用，处理并发和解除应用间耦合关系等。
 
@@ -212,7 +212,7 @@ public async Task<bool> LockExecuteAsync(Action action, string key, string value
 
 ```csharp
 var guid = Guid.NewGuid().ToString();
-Redis.LockExecuteAsync(()=>Console.Writeline("成功抢到锁"),"lockKey",guid);
+Redis.LockExecuteAsync(()=>Console.WriteLine("成功抢到锁"),"lockKey",guid);
 ```
 
 ## 5. RedisHelper
