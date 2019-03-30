@@ -1,5 +1,25 @@
 # Redis
 
+* [1. Redis简介](#1-redis简介)
+* [2. Redis 安装](#2-redis-安装)
+    * [2.1 Redis Server](#21-redis-server)
+    * [2.2 Redis Client](#22-redis-client)
+* [3. Redis 使用](#3-redis-使用)
+    * [3.1 .NET 驱动](#31-net-驱动)
+    * [3.2 基础知识](#32-基础知识)
+    * [3.3 连接Redis](#33-连接redis)
+    * [3.4 Key操作](#34-key操作)
+    * [3.5 String](#35-string)
+    * [3.6 List](#36-list)
+    * [3.7 Set](#37-set)
+    * [3.8 SortedSet](#38-sortedset)
+    * [3.9 Hash](#39-hash)
+    * [3.10 Geo](#310-geo)
+* [4. 高级操作](#4-高级操作)
+    * [4.1 批量操作](#41-批量操作)
+    * [4.2 发布订阅](#42-发布订阅)
+    * [4.3 分布式锁](#43-分布式锁)
+
 ## 1. Redis简介
 Redis 是一个支持数据结构更多的键值对数据库。它的值不仅可以是字符串等基本数据 类型,也可以是类对象,更可以是 Set、List、计数器等高级的数据结构。
 
@@ -66,7 +86,7 @@ IDatabase db = redis.GetDatabase();//默认访问 db0 数据库,可以指定数�
 * 获取数据:`string s = db.StringGet("key")`如果查不到则返回 null
 * 参数、返回值 `RedisKey`、`RedisValue` 类型,进行了运算符重载,可以和 `string`、 `byte[]`之间进行隐式转换。
 
-### 3.3 Key操作
+### 3.4 Key操作
 Redis 里所有数据类型都是用 Key-Value 保存,因此 **Key 操作是针对所有数据类型**。
 
 方法|作用
@@ -75,7 +95,7 @@ Redis 里所有数据类型都是用 Key-Value 保存,因此 **Key 操作是针�
 `KeyExists(RedisKey key)`|判断 Key 是否存在,存在并发问题;
 `KeyExpire(RedisKey key, TimeSpan? expiry)`|设置过期时间
 
-### 3.4 String
+### 3.5 String
 方法|作用
 :-|:-
 db.StringAppend(RedisKey key, RedisValue value)|附加内容,不存在则新建;
@@ -84,7 +104,7 @@ db.StringDecrement("count",1)|计数器减值
 
 计数器不存在则从0开始计，可以以此来计算新闻点击量、点赞量,非常高效。
 
-### 3.5 List
+### 3.6 List
 Redis 中 List是双向链表，长度是无限，左右都可出入元素。可以当成双向队列或者双向栈用,比如可以把聊天记录、商品的物流信息等保存到 List 中。
 
 方法|作用
@@ -101,7 +121,7 @@ RedisValue[] ListRange(RedisKey key, long start = 0, long stop = -1)|读但不�
 
 左进左出或右进右出则可作为栈使用，左进右出或右进左出则可作为队列使用。可以使用Redis的List用作轻量的消息队列使用。
 
-### 3.6 Set
+### 3.7 Set
 Set 是一个元素去重的集合。如使用 Set 保存禁用用户 id 等,就不用做重复性判断了。
 
 注意 Set 不是按照插入顺序遍历的,而是按照自己的一个存储方式来遍历。
@@ -116,7 +136,7 @@ RedisValue[] SetMembers(RedisKey key)|获取集合中的元素
 
 *SetContains,SetLength 会有并发问题*
 
-### 3.7 SortedSet
+### 3.8 SortedSet
 与Set相比SortedSet除了key,value外还提供了一个score字段记录数据记录的“分数”。如果对于数据遍历顺序有要求,可以使用 SortedSet,它会按照分数来进行遍历。
 
 方法|作用
@@ -134,10 +154,10 @@ RedisValue[] SortedSetRangeByScore(RedisKey key, double start = double.NegativeI
 * 热门商品
 * 积分投票
 
-### 3.8 Hash
+### 3.9 Hash
 Hash的value 是一个“键值对集合”或者值是另外一个 Dictionary。可以用于存储对象，类似于Json方式存储对象。
 
-### 3.9 Geo
+### 3.10 Geo
 Geo 是 Redis 3.2 版本后新增的数据类型,用来保存兴趣点(POI,point of interest)的坐标信息。 可以实现计算两 POI 之间的距离、获取一个点周边指定距离的 POI。可用于搜索指定地理位置周边的数据，如嘀嘀打车，附近的人等。
 
 ## 4. 高级操作
