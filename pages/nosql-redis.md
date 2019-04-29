@@ -249,7 +249,7 @@ https://github.com/colin-chang/RedisHelper
 具体使用方式可以查看单元测试
 https://github.com/colin-chang/RedisHelper/blob/master/ColinChang.RedisHelper.Test/RedisHelperTest.cs
 
-> 该帮助类已发布到Nuget
+> [Nuget - ColinChang.RedisHelper](https://www.nuget.org/packages/ColinChang.RedisHelper/)
 
 ```sh
 # Package Manager
