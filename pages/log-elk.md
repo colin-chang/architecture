@@ -53,74 +53,25 @@ input负责日志采集，output负责日志输出，而filter则负责日志分
 
 [官方提供](https://github.com/logstash-plugins/logstash-patterns-core/blob/master/patterns)了一些常用正则的grok pattern可以直接使用，当然我们也可以自定义pattern分析日志。
 
-**在`/logstash/pipeline/logstash.conf`文件中默添加了以下 grok pattern,反注释即可使用。**
+**grok匹配时换行符会导致匹配失败，建议在匹配前将日志中换行替换掉。**
+
+**在`/logstash/pipeline/logstash.conf`文件中默添加了以下 grok pattern,反注释即可使用。** 
 
 例如，定义grok pattern如下。
 ```json
 grok {
-    match => {"message"=>"%{USERNAME:logger}#%{LOGLEVEL:level}#%{DATA:msg}#%{USERNAME:callsite}#%{INT:linenumber}#%{DATA:source}#%{DATA:exception_message}#%{DATA:exception_data}#\s*%{DATA:exception_stacktrace}#%{GREEDYDATA:event_property}"}
+    match => {"message"=>"%{USERNAME:logger}#%{LOGLEVEL:level}#%{DATA:msg}#%{USERNAME:callsite}#%{INT:linenumber}#%{DATA:source}#%{DATA:exception_message}#%{DATA:exception_data}#%{DATA:exception_stacktrace}#%{GREEDYDATA:event_property}"}
 }
 ```
 示例错误日志。
 ```
-WebSample.Controllers.HomeController#ERROR#custom message#WebSample.Controllers.HomeController.Index#24#AsyncMethodBuilderCore.Start => <InvokeNextActionFilterAsync>d__10.MoveNext => ControllerActionInvoker.Next => ControllerActionInvoker.InvokeActionMethodAsync => AsyncMethodBuilderCore.Start => <InvokeActionMethodAsync>d__12.MoveNext => SyncActionResultExecutor.Execute => ObjectMethodExecutor.Execute => <no type>.lambda_method => HomeController.Index#System.NullReferenceException-Object reference not set to an instance of an object.##   at WebSample.Controllers.HomeController.Index() in /Users/zhangcheng/Desktop/Demo/ELK/WebSample/Controllers/HomeController.cs:line 24#https://localhost:6001/
+Xiaoyang.EmotionAnalyze.Program#FATAL#Initialize failed.#Xiaoyang.EmotionAnalyze.Program.Initialize#36#Program.Main => Program.Initialize#StackExchange.Redis.RedisConnectionException-It was not possible to connect to the redis server(s).##在 StackExchange.Redis.ConnectionMultiplexer.ConnectImpl(Object configuration, TextWriter log)    在 ColinChang.RedisHelper.RedisHelper..ctor(String connectionString)    在 Xiaoyang.EmotionAnalyze.Program.Initialize() 位置 Z:\桌面\Xiaoyang\smartclass\EmotionAnalyze\Xiaoyang.EmotionAnalyze\Program.cs:行号 36#https://localhost:6001/
 ```
 
 我们通过使用[Grok Debugger(Pattern填写正则即可)](http://grokdebug.herokuapp.com/)来快速测试匹配结果。
-```json
-{
-  "logger": [
-    [
-      "WebSample.Controllers.HomeController"
-    ]
-  ],
-  "level": [
-    [
-      "ERROR"
-    ]
-  ],
-  "msg": [
-    [
-      "custom message"
-    ]
-  ],
-  "callsite": [
-    [
-      "WebSample.Controllers.HomeController.Index"
-    ]
-  ],
-  "linenumber": [
-    [
-      "24"
-    ]
-  ],
-  "source": [
-    [
-      "AsyncMethodBuilderCore.Start => <InvokeNextActionFilterAsync>d__10.MoveNext => ControllerActionInvoker.Next => ControllerActionInvoker.InvokeActionMethodAsync => AsyncMethodBuilderCore.Start => <InvokeActionMethodAsync>d__12.MoveNext => SyncActionResultExecutor.Execute => ObjectMethodExecutor.Execute => <no type>.lambda_method => HomeController.Index"
-    ]
-  ],
-  "exception_message": [
-    [
-      "System.NullReferenceException-Object reference not set to an instance of an object."
-    ]
-  ],
-  "exception_data": [
-    [
-      ""
-    ]
-  ],
-  "exception_stacktrace": [
-    [
-      "at WebSample.Controllers.HomeController.Index() in /Users/zhangcheng/Desktop/Demo/ELK/WebSample/Controllers/HomeController.cs:line 24"
-    ]
-  ],
-  "event_property": [
-    [
-      "https://localhost:6001/"
-    ]
-  ]
-}
-```
+
+![Grok Debugger](../img/log/elk-grokdebugger.jpg)
+
 
 更多logstash配置详解，可以参阅 https://www.cnblogs.com/xiaobaozi-95/p/9214307.html
 
@@ -160,11 +111,11 @@ $ docker-compose down
     <targets>
         <!-- 打印日志到控制台 -->
         <target xsi:type="Console" name="console"
-                layout="${logger}#${level:uppercase=true}#${message}#${callsite:includeSourcePath=true}#${callsite-linenumber}#${stacktrace:topFrames=10}#${exception:format=Type}-${exception}#${exception:format=Data}#${exception:format=StackTrace}#${event-properties:item=EventId}" />
+                layout="${logger}#${level:uppercase=true}#${message}#${callsite:includeSourcePath=true}#${callsite-linenumber}#${stacktrace:topFrames=10}#${exception:format=Type}-${exception}#${replace-newlines:${exception:format=Data}}#${replace-newlines:${exception:format=StackTrace:trimWhiteSpace=true}}#${event-properties:item=EventId}" />
         <!-- 记录日志到 logstash -->
         <target xsi:type="Network" name="logstash" keepConnection="false"
                 address="tcp://127.0.0.1:5000"
-                layout="${logger}#${level:uppercase=true}#${message}#${callsite:includeSourcePath=true}#${callsite-linenumber}#${stacktrace:topFrames=10}#${exception:format=Type}-${exception}#${exception:format=Data}#${exception:format=StackTrace}#${event-properties:item=EventId}" />
+                layout="${logger}#${level:uppercase=true}#${message}#${callsite:includeSourcePath=true}#${callsite-linenumber}#${stacktrace:topFrames=10}#${exception:format=Type}-${exception}#${replace-newlines:${exception:format=Data}}#${replace-newlines:${exception:format=StackTrace:trimWhiteSpace=true}}#${event-properties:item=EventId}" />
     </targets>
     
     <rules>
