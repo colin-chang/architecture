@@ -60,12 +60,12 @@ input负责日志采集，output负责日志输出，而filter则负责日志分
 例如，定义grok pattern如下。
 ```json
 grok {
-    match => {"message"=>"%{USERNAME:logger}#%{LOGLEVEL:level}#%{DATA:msg}#%{USERNAME:callsite}#%{INT:linenumber}#%{DATA:source}#%{DATA:exception_message}#%{DATA:exception_data}#%{DATA:exception_stacktrace}#%{GREEDYDATA:event_property}"}
+    match => {"message"=>"%{LOGLEVEL:level}#%{USERNAME:logger}#%{DATA:callsite}#%{DATA:msg}#%{DATA:event_property}#%{DATA:exception_message}\|%{GREEDYDATA:exception_stacktrace}"}
 }
 ```
 示例错误日志。
 ```
-Xiaoyang.EmotionAnalyze.Program#FATAL#Initialize failed.#Xiaoyang.EmotionAnalyze.Program.Initialize#36#Program.Main => Program.Initialize#StackExchange.Redis.RedisConnectionException-It was not possible to connect to the redis server(s).##在 StackExchange.Redis.ConnectionMultiplexer.ConnectImpl(Object configuration, TextWriter log)    在 ColinChang.RedisHelper.RedisHelper..ctor(String connectionString)    在 Xiaoyang.EmotionAnalyze.Program.Initialize() 位置 Z:\桌面\Xiaoyang\smartclass\EmotionAnalyze\Xiaoyang.EmotionAnalyze\Program.cs:行号 36#https://localhost:6001/
+FATAL#Xiaoyang.EmotionAnalyze.Program#Xiaoyang.EmotionAnalyze.Program.RunThrift 61#RunThrift failed.##System.TypeInitializationException: “Xiaoyang.EmotionAnalyze.Contract.Implement.EmotionAnalyzer”的类型初始值设定项引发异常。 ---> System.IO.FileNotFoundException: 未能加载文件 或程序集“Affdex, Version=4.0.0.615, Culture=neutral, PublicKeyToken=null”或它的某一个依赖项。系统找不到指定的文件。|   在 Xiaoyang.EmotionAnalyze.Contract.Implement.EmotionAnalyzer..cctor()|   --- 内部异常堆栈跟踪的结尾 ---|   在 Xiaoyang.EmotionAnalyze.Contract.Implement.EmotionAnalyzer..ctor(RedisHelper redis, ILogger`1 logger)|   在 invoker-94fbbdc3-6029-4ba8-bd06-c3b11de6d8a1(Object[] )|   在 AspectCore.Injector.ServiceCallSiteResolver.<>c__DisplayClass4_0.<ResolveCallback>b__0(ServiceResolver resolver)|   在 AspectCore.Injector.ServiceCallSiteResolver.<>c__DisplayClass8_0.<ResolveProxyService>b__0(ServiceResolver resolver)|   在 AspectCore.Injector.ServiceCallSiteResolver.<>c__DisplayClass4_0.<ResolveCallback>b__0(ServiceResolver resolver)|   在 System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)|   在 Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)|   在 Xiaoyang.EmotionAnalyze.Program.RunThrift(Int32 port) 位置 Z:\桌面\Xiaoyang\smartclass\EmotionAnalyze\Xiaoyang.EmotionAnalyze\Program.cs:行号 61
 ```
 
 我们通过使用[Grok Debugger(Pattern填写正则即可)](http://grokdebug.herokuapp.com/)来快速测试匹配结果。
@@ -107,25 +107,25 @@ $ docker-compose down
 参照[NLog文档](https://github.com/NLog/NLog.web/wiki)进行简单配置，可以通过控制台输出测试的日志内容和格式是否正确。
 
 以上基本配置完成后，在`nlog.config`文件中`nlong`下添加如下配置。
-```xml
-    <targets>
-        <!-- 打印日志到控制台 -->
-        <target xsi:type="Console" name="console"
-                layout="${logger}#${level:uppercase=true}#${message}#${callsite:includeSourcePath=true}#${callsite-linenumber}#${stacktrace:topFrames=10}#${exception:format=Type}-${exception}#${replace-newlines:${exception:format=Data}}#${replace-newlines:${exception:format=StackTrace:trimWhiteSpace=true}}#${event-properties:item=EventId}" />
-        <!-- 记录日志到 logstash -->
-        <target xsi:type="Network" name="logstash" keepConnection="false"
-                address="tcp://127.0.0.1:5000"
-                layout="${logger}#${level:uppercase=true}#${message}#${callsite:includeSourcePath=true}#${callsite-linenumber}#${stacktrace:topFrames=10}#${exception:format=Type}-${exception}#${replace-newlines:${exception:format=Data}}#${replace-newlines:${exception:format=StackTrace:trimWhiteSpace=true}}#${event-properties:item=EventId}" />
-    </targets>
-    
-    <rules>
-        <!-- 所有Warn级别以上日志打印到控制台 -->
-        <logger name="*" minlevel="Warn" writeTo="console" />
-        
-        <!-- 自定义日志Trace级别以上 + 系统Info级别以上 记录到logstash中 -->
-        <logger name="Microsoft.*" maxlevel="Info" final="true" />
-        <logger name="*" minlevel="Trace" writeTo="logstash" />
-    </rules>
+```xml    
+  <targets>
+    <!-- 打印日志到控制台 -->
+    <target xsi:type="Console" name="console"
+            layout="${date} | ${level:uppercase=true} | ${logger} | ${message} | ${replace-newlines:${exception:format=toString}}" />
+    <!-- 记录日志到 logstash -->
+    <target xsi:type="Network" name="logstash" keepConnection="false"
+            address="tcp://192.168.0.211:5000"
+            layout="${level:uppercase=true}#${logger}#${callsite:includeSourcePath=true} ${callsite-linenumber}#${message}#${replace-newlines:${event-properties:item=EventId}}#${replace-newlines:replacement=|:${exception:format=ToString}}"/>
+  </targets>
+
+  <rules>
+    <!-- 忽略系统Info级别以下日志 -->
+    <logger name="Microsoft.*" maxlevel="Info" final="true"/>
+    <!-- Trace级别以上日志输出到控制台 -->
+    <logger name="*" minlevel="Trace" writeTo="console"/>
+    <!-- Info级别以上日志输出logstash -->
+    <logger name="*" minlevel="Info" writeTo="logstash"/>
+  </rules>
 ```
 
 * **Targets**
