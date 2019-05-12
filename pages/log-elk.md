@@ -73,7 +73,9 @@ FATAL#Xiaoyang.EmotionAnalyze.Program#Xiaoyang.EmotionAnalyze.Program.RunThrift 
 ![Grok Debugger](../img/log/elk-grokdebugger.jpg)
 
 
-更多logstash配置详解，可以参阅 https://www.cnblogs.com/xiaobaozi-95/p/9214307.html
+更多logstash配置详解，可以参阅 
+* https://www.elastic.co/guide/en/logstash/6.7/event-dependent-configuration.html
+* https://www.cnblogs.com/xiaobaozi-95/p/9214307.html
 
 #### 2.2.2 Output
 ```json
