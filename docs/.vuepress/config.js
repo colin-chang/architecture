@@ -1,6 +1,6 @@
 module.exports = {
-    title: '分布式系统架构设计',
-    description: '分布式系统架构设计',
+    title: '系统架构设计与优化',
+    description: '拥抱云时代容器化微服务化系统架构',
     base: '/architecture/',
     head: [
         ['link', {
