@@ -1,25 +1,5 @@
 # Redis
 
-* [1. Redis简介](#1-redis简介)
-* [2. Redis 安装](#2-redis-安装)
-    * [2.1 Redis Server](#21-redis-server)
-    * [2.2 Redis Client](#22-redis-client)
-* [3. Redis 使用](#3-redis-使用)
-    * [3.1 .NET 驱动](#31-net-驱动)
-    * [3.2 基础知识](#32-基础知识)
-    * [3.3 连接Redis](#33-连接redis)
-    * [3.4 Key操作](#34-key操作)
-    * [3.5 String](#35-string)
-    * [3.6 List](#36-list)
-    * [3.7 Set](#37-set)
-    * [3.8 SortedSet](#38-sortedset)
-    * [3.9 Hash](#39-hash)
-    * [3.10 Geo](#310-geo)
-* [4. 高级操作](#4-高级操作)
-    * [4.1 批量操作](#41-批量操作)
-    * [4.2 发布订阅](#42-发布订阅)
-    * [4.3 分布式锁](#43-分布式锁)
-
 ## 1. Redis简介
 Redis 是一个支持数据结构更多的键值对数据库。它的值不仅可以是字符串等基本数据 类型,也可以是类对象,更可以是 Set、List、计数器等高级的数据结构。
 
@@ -38,7 +18,7 @@ Memcached 数据存在内存中,memcached 重启后数据就消失;而 Redis 会
 * Redis 是单线程的,因此单个 Redis 实例只能使用一个 CPU 核,不能充分发挥服务器的性能。可以在一台服务器上运行多个 Redis 实例,不同实例监听不同端口,再互相组成集群。
 * 做缓存性能不如 Memcached;
 
-Redis高级教程参阅 https://blog.csdn.net/hjm4702192/article/details/80518856
+Redis高级教程参阅 [https://blog.csdn.net/hjm4702192/article/details/80518856](https://blog.csdn.net/hjm4702192/article/details/80518856)
 
 ## 2. Redis 安装
 ### 2.1 Redis Server
@@ -148,11 +128,11 @@ SortedSetEntry[] SortedSetRangeByRankWithScores(RedisKey key, long start = 0, lo
 RedisValue[] SortedSetRangeByRank(RedisKey key, long start = 0, long stop = -1, Order order = Order.Ascending)|根据排序返回，如返回TOP10元素
 RedisValue[] SortedSetRangeByScore(RedisKey key, double start = double.NegativeInfinity, double stop = double.PositiveInfinity, Exclude exclude = Exclude.None, Order order = Order.Ascending, long skip = 0, long take = -1)|根据分数返回。如返回大于90分的元素
 
-> 应用场景
-
+::: tip 应用场景
 * 热搜榜。每搜一次一个关键词,就给这个关键词加一分，最后提取 TOP-N 即可
 * 热门商品
 * 积分投票
+:::
 
 ### 3.9 Hash
 Hash的value 是一个“键值对集合”或者值是另外一个 Dictionary。可以用于存储对象，类似于Json方式存储对象。

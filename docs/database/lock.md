@@ -23,7 +23,7 @@
 (*)锁分为两个维度:锁等级(共享锁、排他锁等)和锁范围(行锁、表锁)。主流数据库都支持这些锁,不过语法有差别。
 (*)死锁:事务 1 依次锁定 A、B;事务 2 依次锁定 B、A。他们两个如果碰到一起就会产生死锁。
 
-数据库事务、锁和死锁等问题，参考 http://www.cnblogs.com/knowledgesea/p/3714417.html
+数据库事务、锁和死锁等问题，参考 [http://www.cnblogs.com/knowledgesea/p/3714417.html](http://www.cnblogs.com/knowledgesea/p/3714417.html)
 
 ### 2.1 悲观锁
 
@@ -173,7 +173,7 @@ Console.ReadKey();
 ```
 EF 会在 `SaveChanges()` 之后去检查 `RowVersion` 是否有变化,如果发现和之前查的时候不一致就会抛 `DbUpdateConcurrencyException`异常。
 
-(*)参考资料:http://www.cnblogs.com/Gyoung/archive/2013/01/18/2866649.html
+> 参考资料: [http://www.cnblogs.com/Gyoung/archive/2013/01/18/2866649.html](http://www.cnblogs.com/Gyoung/archive/2013/01/18/2866649.html)
 
 #### 2) 原生SQL
 ```csharp

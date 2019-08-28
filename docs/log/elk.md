@@ -1,14 +1,5 @@
 # ELK
 
-* [1. 简介](#1-简介)
-* [2. ELK环境搭建](#2-elk环境搭建)
-  * [2.1 Clone Repository](#21-clone-repository)
-  * [2.2 Logstash Configuration](#22-logstash-configuration)
-  * [2.3 启动/停止 ELK](#23-启动停止-elk)
-* [3. 记录日志](#3-记录日志)
-* [4. 查看日志](#4-查看日志)
-
-
 ELK是三个开源软件的缩写，分别表示：Elasticsearch , Logstash, Kibana。ELK是经典的分布日志框架组合。
 
 ## 1. 简介

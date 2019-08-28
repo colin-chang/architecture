@@ -1,23 +1,4 @@
 # MongoDB
-* [1. 简介](#1-简介)
-* [2. 基本概念](#2-基本概念)
-* [3. 安装](#3-安装)
-    * [3.1 服务器](#31-服务器)
-    * [3.2 客户端](#32-客户端)
-* [4. Mongo连接](#4-mongo连接)
-    * [4.1 连接字符串](#41-连接字符串)
-    * [4.2 Mongo连接池](#42-mongo连接池)
-* [5. CRUD](#5-crud)
-    * [5.1 初始化](#51-初始化)
-    * [5.2 Filter](#52-filter)
-    * [5.3 插入数据](#53-插入数据)
-    * [5.4 删除数据](#54-删除数据)
-    * [5.5 更新数据](#55-更新数据)
-    * [5.6 查询数据](#56-查询数据)
-    * [5.7 MongoHelper](#57-mongohelper)
-* [6. Mongo优化](#6-mongo优化)
-    * [6.1 优化设计原则](#61-优化设计原则)
-    * [6.2 索引](#62-索引)
 
 ## 1. 简介
 MongoDB 是一个基于分布式文件存储的数据库,旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
@@ -51,14 +32,13 @@ primary key|primary key|主键,MongoDB自动将_id字段设置为主键
 * MongoDB的单个实例可以容纳多个独立的数据库。每一个都有自己的集合和权限，不同的数据库也放置在不同的文件中。
 * 文档是一组键值(key-value)对(即 BSON)。MongoDB 的文档不需要设置相同的字段，并且相同的字段不需要相同的数据类型。文档中的键/值对是有序的。
 
-> **ObjectId**
-
-MongoDB 中存储的文档必须有一个 _id 键。这个键的值可以是任何类型的，默认是个 ObjectId 对象。
-
-ObjectId 类似唯一主键，可以很快的去生成和排序，包含 12 bytes，含义是：
-* 前 4 个字节表示创建 unix 时间戳(UTC)
-* 接下来的 3 个字节是机器标识码
-* 紧接的两个字节由进程 id 组成 PID
+::: tip ObjectId
+MongoDB 中存储的文档必须有一个 `_id` 键。这个键的值可以是任何类型的，默认是个`ObjectId`对象。
+:::
+`ObjectId`类似唯一主键，可以很快的去生成和排序，包含12B，其含义如下：
+* 前四个字节表示创建 unix 时间戳(UTC)
+* 接下来的三个字节是机器标识码
+* 紧接的两个字节为PID
 * 最后三个字节是随机数
 
 ![ObjectId结构组成](../img/nosql/objectid.jpg)
@@ -286,11 +266,9 @@ await persons.FindAsync(new BsonDocument(), findOpt);
 ### 5.7 MongoHelper
 仿照关系型数据库中`SqlHelper`,我们可以将对Mongo的常用操作封装到一个`MongoHelper`中,支持简单CRUD操作，包含分页、排序、大数量查询等常用功能。
 
-代码已上传到Github，这里不再展开。
-https://github.com/colin-chang/mongohelper
+代码已上传到 [Github](https://github.com/colin-chang/mongohelper)，这里不再展开。
 
-具体使用方式可以查看单元测试
-https://github.com/colin-chang/MongoHelper/blob/master/ColinChang.MongoHelper.Test/MongoHelperTest.cs
+具体使用方式可以查看[单元测试](https://github.com/colin-chang/MongoHelper/blob/master/ColinChang.MongoHelper.Test/MongoHelperTest.cs)
 
 > [Nuget - ColinChang.MongoHelper](https://www.nuget.org/packages/ColinChang.MongoHelper/)
 
@@ -355,8 +333,8 @@ TTL 索引（time-to-live index，具有生命周期的索引），使用TTL索�
 
 
 > 参考文档
-* https://www.cnblogs.com/williamjie/p/9305807.html
-* http://www.cnblogs.com/crazylights/archive/2013/05/08/3066056.html
-* http://www.runoob.com/mongodb/mongodb-query.html
-* http://www.mongoing.com/docs/tutorial/optimize-query-performance-with-indexes-and-projections.html
-* https://blog.fundebug.com/2018/09/19/18-principle-to-improve-mongodb-performance/
+* [ https://www.cnblogs.com/williamjie/p/9305807.html]( https://www.cnblogs.com/williamjie/p/9305807.html)
+* [ http://www.cnblogs.com/crazylights/archive/2013/05/08/3066056.html]( http://www.cnblogs.com/crazylights/archive/2013/05/08/3066056.html)
+* [ http://www.runoob.com/mongodb/mongodb-query.html]( http://www.runoob.com/mongodb/mongodb-query.html)
+* [ http://www.mongoing.com/docs/tutorial/optimize-query-performance-with-indexes-and-projections.html]( http://www.mongoing.com/docs/tutorial/optimize-query-performance-with-indexes-and-projections.html)
+* [ https://blog.fundebug.com/2018/09/19/18-principle-to-improve-mongodb-performance/]( https://blog.fundebug.com/2018/09/19/18-principle-to-improve-mongodb-performance/)

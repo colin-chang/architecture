@@ -1,17 +1,17 @@
 ---
 home: true
 heroImage: /hero.png
-heroText: 开启Python人工智能之旅
-tagline: Python—人工智能时代主流语言
+heroText: 系统架构设计与优化实践
+tagline: 拥抱云时代容器化微服务化系统架构
 actionText: 快速了解 →
 actionLink: /architecture/intro
 features:
 
-- title: 免费开源
-  details: python是FLOSS（自由/开放源码软件）之一，可以随意修改和定制源码。
-- title: 可移植
-  details:  避免使用依赖于系统的特性，python程序无需修改就可以运行在包括Linux、Windows、mac OS等各大平台。
-- title: 扩展丰富
-  details: python有着完善的生态圈。除了庞大的标准库，还有丰富的高质量第三方库。
+- title: 云化
+  details: 云计算时代系统设计大部分开始转向云化更合理配置的利用云服务资源。
+- title: 容器化
+  details: 以Docker为代表的容器化技术大潮席卷整个互联网行业。
+- title: 微服务化
+  details: 容器化的企业架构，基本可以通过少量重构完成微服务化，降低成本提高可用性。
 footer: Copyright © Colin Blog 2018
 ---
