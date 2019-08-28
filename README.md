@@ -1,7 +1,7 @@
 # 系统架构设计与优化实践
 
 <a src='https://colin-chang.site/architecture/'>
-<img src='https://colin-chang.site/architecture/hero.png'/>
+<img src='https://colin-chang.site/architecture/hero.png' width='450' />
 </a>
 
 ## 拥抱云时代容器化微服务化系统架构
