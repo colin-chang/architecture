@@ -147,7 +147,33 @@ Redis Cluster同样采用Master-Salve模式，写数据在master节点，它会�
 > 参考资料 [官方文档](https://redis.io/topics/cluster-tutorial/)
 
 ## 3. Redis 使用
-### 3.1 .NET 驱动
+在安装Redis时会同时安装服务端和客户端。服务端命令为`redis-server`客户端命令为`redis-cli`。使用客户端连接Redis服务之后可以在shell中执行Redis命令。
+
+```sh
+# 连接本地redis服务。如果绑定非6379端口，需要提供端口，如 redis-cli -p 6380
+redis-cli 
+
+keys * # get all keys
+set name Colin # set a string value
+get name # get a string value of name
+```
+
+除了使用Redis提供了命令行客户端，我们也可以使用第三方GUI客户端，如[Redis Desktop Manager](https://github.com/uglide/RedisDesktopManager/)等。一般客户端软件也提供了Redis命令行。
+
+![Redis Desktop Manager](../img/nosql/redis-rdm.jpg)
+
+Redis按不同数据类型提供了对应的操作命令，[Python平台的redis driver](https://colin-chang.site/python/database/redis.html)与Redis原生命令基本相同，需要了解的读者可以参考，这里不在列举Redis命令。
+
+下面我们以.Net Core平台为例进行讲解，Python平台请参阅[https://colin-chang.site/python/database/redis.html](https://colin-chang.site/python/database/redis.html)
+
+### 3.1 基础知识
+
+* 不同系统放到 Redis 中的数据是不隔离的,因此设定 Key 的时候也要特别注意。
+* Redis 服务器默认建了 16 个数据库,Redis 的想法是让大家把不同系统的数据放到不同的数据库中。但是建议大家不要这样用,因为 Redis 是单线程的,不同业务都放到同一个 Redis 实例的话效率不高,建议放到不同的实例中。因此尽量只用默认的 db0 数据库。
+* Redis 支持的数据结构有 string、list、set、sortedset、hash、geo(redis 3.2 以上版本)。对应的 Redis 客户端里的方法都是 StringXXX、HashXXX、GeoXXX 等方法。不同数据类型的操作方 法不能混用,比如不能用 ListXXX 写入的值用 StringXXX 去读取或者写入等操作。
+* Redis的所有数据类型本质上最终存储的都是String类型，Set等高级类型只是使用不同数据结构管理String类型。所以Redis中并不能存储复杂对象，但可序列化后存储。
+
+### 3.2 Redis Driver for .Net
 .NET Core平台下，ServiceStack.Redis 是商业版，免费版有限制。StackExchange.Redis 2.0之前版本有超时问题，现已解决。除了这两个传统的库之外，国内大牛也开了一些优秀的高性能.Net Core的Redis组件，供我们选择。
 
 * [NewLife.Redis](http://git.newlifex.com/NewLife/NewLife.Redis) 他是NewLife团队开发的，已经在ZTO大数据实时计算中广泛应用，200多个Redis实例稳定工作一年多，每天处理近1亿包裹数据，日均调用量80亿次。
@@ -159,12 +185,6 @@ Redis Cluster同样采用Master-Salve模式，写数据在master节点，它会�
 
 下面我们以使用最广泛的[StackExchange.Redis](https://stackexchange.github.io/StackExchange.Redis/)为例讲解。
 
-### 3.2 基础知识
-
-* 不同系统放到 Redis 中的数据是不隔离的,因此设定 Key 的时候也要特别注意。
-* Redis 服务器默认建了 16 个数据库,Redis 的想法是让大家把不同系统的数据放到不同的数据库中。但是建议大家不要这样用,因为 Redis 是单线程的,不同业务都放到同一个 Redis 实例的话效率不高,建议放到不同的实例中。因此尽量只用默认的 db0 数据库。
-* Redis 支持的数据结构有 string、list、set、sortedset、hash、geo(redis 3.2 以上版本)。对应的 Redis 客户端里的方法都是 StringXXX、HashXXX、GeoXXX 等方法。不同数据类型的操作方 法不能混用,比如不能用 ListXXX 写入的值用 StringXXX 去读取或者写入等操作。
-* Redis的所有数据类型本质上最终存储的都是String类型，Set等高级类型只是使用不同数据结构管理String类型。所以Redis中并不能存储复杂对象，但可序列化后存储。
 
 ### 3.3 连接Redis
 
