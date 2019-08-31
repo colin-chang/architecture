@@ -1,6 +1,6 @@
 # Redis
 
-## 1. Redis简介
+## 1. Redis 简介
 Redis 是一个支持数据结构更多的键值对数据库。它的值不仅可以是字符串等基本数据 类型,也可以是类对象,更可以是 Set、List、计数器等高级的数据结构。
 
 Memcached 也可以保存类似于 Set、List 这样的结构,但是如果说要向 List 中增加元素, Memcached 则需要把 List 全部元素取出来,然后再把元素增加进去,然后再保存回去,不仅效率低,而且有并发访问问题。Redis 内置的 Set、List 等可以直接支持增加、删除元素的 操作,效率很高,操作是原子的。
@@ -24,14 +24,12 @@ Redis高级教程参阅 [https://blog.csdn.net/hjm4702192/article/details/805188
 ### 2.1 单节点
 推荐使用Docker方式搭建redis服务器，简单高效。
 ```sh
-docker pull redis:alpine
-
 docker run \
 -d \
 --name redis \
 -p 6379:6379 \
 redis:alpine \
---requirepass "123123"
+--requirepass "password"
 ```
 
 Redis客户端有其命令行，也有第三方GUI客户端。比较流行有是开源跨平台的[RedisDesktopManager](https://github.com/uglide/RedisDesktopManager)。
@@ -146,19 +144,19 @@ Redis Cluster同样采用Master-Salve模式，写数据在master节点，它会�
 
 > 参考资料 [官方文档](https://redis.io/topics/cluster-tutorial/)
 
-## 3. Redis 使用
-在安装Redis时会同时安装服务端和客户端。服务端命令为`redis-server`客户端命令为`redis-cli`。使用客户端连接Redis服务之后可以在shell中执行Redis命令。
+## 3. Redis 数据类型
+在安装Redis时会同时安装服务端和客户端。服务端为`redis-server`客户端为`redis-cli`。使用客户端连接Redis服务之后可以在shell中执行Redis命令。
 
 ```sh
-# 连接本地redis服务。如果绑定非6379端口，需要提供端口，如 redis-cli -p 6380
-redis-cli 
+# 连接本地redis服务
+redis-cli -p 6379 -a password
 
 keys * # get all keys
 set name Colin # set a string value
 get name # get a string value of name
 ```
 
-除了使用Redis提供了命令行客户端，我们也可以使用第三方GUI客户端，如[Redis Desktop Manager](https://github.com/uglide/RedisDesktopManager/)等。一般客户端软件也提供了Redis命令行。
+除了使用Redis提供的命令行客户端，我们也可以使用第三方GUI客户端，如[Redis Desktop Manager](https://github.com/uglide/RedisDesktopManager/)等。一般客户端软件也提供了Redis命令行。
 
 ![Redis Desktop Manager](../img/nosql/redis-rdm.jpg)
 
