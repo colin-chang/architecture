@@ -20,8 +20,7 @@ Memcached 数据存在内存中,memcached 重启后数据就消失;而 Redis 会
 
 Redis高级教程参阅 [https://blog.csdn.net/hjm4702192/article/details/80518856](https://blog.csdn.net/hjm4702192/article/details/80518856)
 
-## 2. Redis 环境搭建
-### 2.1 单节点
+## 2. Redis 安装
 推荐使用Docker方式搭建redis服务器，简单高效。
 ```sh
 docker run \
@@ -32,120 +31,8 @@ redis:alpine \
 --requirepass "password"
 ```
 
-Redis客户端有其命令行，也有第三方GUI客户端。比较流行有是开源跨平台的[RedisDesktopManager](https://github.com/uglide/RedisDesktopManager)。
+在安装Redis时会同时安装服务端和客户端。服务端为`redis-server`客户端为`redis-cli`。可以使用客户端执行 Redis Shell 命令。需要了解 Redis Shell 的读者可以参阅 [redis driver for python](https://colin-chang.site/python/database/redis.html) (接口与 Redis Shell 基本一致)。
 
-> redis标准配置文件 [http://download.redis.io/redis-stable/redis.conf](http://download.redis.io/redis-stable/redis.conf)
-
-### 2.2 主从架构
-
-Redis可以配置`master-slave`模式来实现读写分离，数据备份和故障转移等功能。一般master节点用于写数据，而数据读取可以直接访问slave节点，slave节点数据默认只读。
-
-![Redis横向主从结构](../img/nosql/redis-master-slave-horizontal.jpg)
-
-master节点可以配置多slave节点，master的slave节点太多会增加主从同步资源开销,可以使用下面的拓扑结构减轻主节点推送的压力。
-
-![Redis纵向主从结构](../img/nosql/redis-master-slave-vertical.jpg)
-
-下面是一个“一主二从”的docker-compose示例。
-```yml
-version: '3.7'
-
-services:
-  redis-master:
-    image: redis:alpine
-    container_name: redis-master
-    command: redis-server --requirepass master_password
-    ports: 
-      - "6379:6379"
-    restart: always
-
-  redis-slave1:
-    image: redis:alpine
-    container_name: redis-slave1
-    command: redis-server --slaveof redis-master 6379 --masterauth master_password --port 6380 --requirepass slave_password
-    ports: 
-      - "6380:6380"
-    restart: always
-    depends_on:
-      - redis-master
-
-  redis-slave2:
-    image: redis:alpine
-    container_name: redis-slave2
-    command: redis-server --slaveof redis-master 6379 --masterauth master_password --port 6381 --requirepass slave_password
-    ports: 
-      - "6381:6381"
-    restart: always
-    depends_on:
-      - redis-master
-```
-
-主从结构中只需要修改slave节点配置文件，添加`slaveof`参数绑定主节点即可。或者我们可以使用docker-compose来快速搭建一个主从结构的Reids环境。
-
-主从架构中如果master节点出现故障，需要人工选择和修改slave节点配置升级其为新的master节点，无法实现高可用性。高可用(主从复制、主从切换)redis集群有两种方案，一种是redis-sentinel，只有一个master，各实例数据保持一致；一种是redis-cluster，也叫分布式redis集群，可以有多个master，数据分片分布在这些master上。
-
-### 2.3 redis-sentinel
-
-哨兵机制(sentinel)可以在主节点出现故障时，由Redis Sentinel自动完成故障发现和转移，并通知应用方，实现高可用性。
-
-redis-sentinel作为独立的服务，用于管理多个redis实例，该系统主要执行以下四个任务：
-* 监控 (Monitor): 检查redis主、从实例是否正常运作
-* 通知 (Notification): 监控的redis服务出现问题时，可通过API发送通知告警
-* 自动故障迁移 (Automatic Failover): 当检测到redis主库不能正常工作时，redis-sentinel会开始做自动故障判断、迁移等操作，先是移除失效redis主服务，然后将其中一个从服务器升级为新的主服务器，并让失效主服务器的其他从服务器改为复制新的主服务器。当客户端试图连接失效的主服务器时，集群也会向客户端返回最新主服务器的地址，使得集群可以使用新的主服务器来代替失效服务器
-* 配置中心。sentinel启动时指定了mater节点，并可自动发现和动态更新slave节点。它可为应用程序提供集群中所有节点信息。
-
-我们只需要配置master节点即可，Sentinel会自动发现slave节点并动态更新配置。
-
-Redis至少使用三个Sentinel节点。sentinel.conf简单配置如下。
-```conf
-port 26379
-
-# bind to master node.the 'redis-service' is an alias.
-# redis-master 6379 is the address of master node
-# The quorum was set to the value of 2 (last argument of sentinel monitor configuration directive).
-sentinel monitor redis-service redis-master 6379 2
-
-# down-after-milliseconds value is 5000 milliseconds, that is 5 seconds, so masters will be detected as failing as soon as we don't receive any reply from our pings within this amount of time.
-sentinel down-after-milliseconds redis-service 5000
-
-sentinel failover-timeout redis-service 60000
-sentinel parallel-syncs redis-service 1
-
-sentinel auth-pass redis-service master_password
-```
-
-![Redis哨兵机制](../img/nosql/redis-sentinel.jpg)
-
-* Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
-* 应用程序与redis-sentinel集群交互示例参阅 [https://colin-chang.site/python/database/redis.html#_2-1-redis-sentinel](https://colin-chang.site/python/database/redis.html#_2-1-redis-sentinel)
-
-> 参考资料
-* Sentinel官方文档: [https://redis.io/topics/sentinel](https://redis.io/topics/sentinel)
-* 标准配置文件: [http://download.redis.io/redis-stable/sentinel.conf](http://download.redis.io/redis-stable/sentinel.conf)
-* [https://www.cnblogs.com/hckblogs/p/11186311.html](https://www.cnblogs.com/hckblogs/p/11186311.html)
-* [https://blog.51cto.com/8939110/2429771](https://blog.51cto.com/8939110/2429771)
-
-### 2.4 redis-cluster
-Redis3.0版本之前，可以通过Redis Sentinel来实现高可用，从3.0版本之后，官方推出了Redis Cluster，它的主要用途是实现数据分片(Data Sharding)，同样可以实现高可用，是官方当前推荐的方案。
-·
-redis cluster在设计的时候，就考虑到了去中⼼化，去中间件，集群中的每个节点都是平等的，每个节点都保存各⾃的数据和整个集群的状态。每个节点都和其他所有节点连接，⽽且这些连接保持活跃，保证只需要连接集群中任意节点，都可获取到其他节点的数据。
-
-![redis-cluster-slot](../img/nosql/redis-cluster.jpg)
-
-在Redis Sentinel模式中，每个节点需要保存全量数据，冗余比较多，而在Redis Cluster模式中，每个分片只需要保存一部分的数据。 Redis Cluster的具体实现细节是采用了Hash槽的概念，集群会预先分配16384个槽，并将这些槽分配给具体的服务节点，通过对Key进行CRC16(key)%16384运算得到对应的槽是哪一个，从而将读写操作转发到该槽所对应的服务节点。当有新的节点加入或者移除的时候，再来迁移这些槽以及其对应的数据。在这种设计之下，我们就可以很方便的进行动态扩容或缩容。
-
-Redis Cluster同样采用Master-Salve模式，写数据在master节点，它会与其对应的salve进⾏数据同步。当读取数据时，也根据⼀致性哈希算法到对应的master节点获取数据。当⼀个master挂掉之后，会自动切换其对应salve节点为新master节点。
-
-**redis-cluster要求至少3个主节点(否则在创建集群时会失败)**，并且当存活的主节点数⼩于总节点数的⼀半时，整个集群就⽆法提供服务了。
-
-* Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
-* 物理机搭建教程参阅 [https://www.cnblogs.com/wuxl360/p/5920330.html](https://www.cnblogs.com/wuxl360/p/5920330.html)
-* 应用程序与redis-cluster交互示例参阅 [https://colin-chang.site/python/database/redis.html#_2-2-redis-cluster](https://colin-chang.site/python/database/redis.html#_2-2-redis-cluster)
-
-> 参考资料 [官方文档](https://redis.io/topics/cluster-tutorial/)
-
-## 3. Redis 数据类型
-在安装Redis时会同时安装服务端和客户端。服务端为`redis-server`客户端为`redis-cli`。使用客户端连接Redis服务之后可以在shell中执行Redis命令。
 
 ```sh
 # 连接本地redis服务
@@ -160,10 +47,7 @@ get name # get a string value of name
 
 ![Redis Desktop Manager](../img/nosql/redis-rdm.jpg)
 
-Redis按不同数据类型提供了对应的操作命令，[Python平台的redis driver](https://colin-chang.site/python/database/redis.html)与Redis原生命令基本相同，需要了解的读者可以参考，这里不在列举Redis命令。
-
-下面我们以.Net Core平台为例进行讲解，Python平台请参阅[https://colin-chang.site/python/database/redis.html](https://colin-chang.site/python/database/redis.html)
-
+## 3. Redis 数据类型
 ### 3.1 基础知识
 
 * 不同系统放到 Redis 中的数据是不隔离的,因此设定 Key 的时候也要特别注意。
@@ -171,7 +55,9 @@ Redis按不同数据类型提供了对应的操作命令，[Python平台的redis
 * Redis 支持的数据结构有 string、list、set、sortedset、hash、geo(redis 3.2 以上版本)。对应的 Redis 客户端里的方法都是 StringXXX、HashXXX、GeoXXX 等方法。不同数据类型的操作方 法不能混用,比如不能用 ListXXX 写入的值用 StringXXX 去读取或者写入等操作。
 * Redis的所有数据类型本质上最终存储的都是String类型，Set等高级类型只是使用不同数据结构管理String类型。所以Redis中并不能存储复杂对象，但可序列化后存储。
 
-### 3.2 Redis Driver for .Net
+### 3.2 Redis Driver
+Redis作为流行的内NoSQL内存数据库，各主流平台都提供了相应的Driver，下面我们以.Net平台为例，其他平台基本类似。
+
 .NET Core平台下，ServiceStack.Redis 是商业版，免费版有限制。StackExchange.Redis 2.0之前版本有超时问题，现已解决。除了这两个传统的库之外，国内大牛也开了一些优秀的高性能.Net Core的Redis组件，供我们选择。
 
 * [NewLife.Redis](http://git.newlifex.com/NewLife/NewLife.Redis) 他是NewLife团队开发的，已经在ZTO大数据实时计算中广泛应用，200多个Redis实例稳定工作一年多，每天处理近1亿包裹数据，日均调用量80亿次。
@@ -183,8 +69,9 @@ Redis按不同数据类型提供了对应的操作命令，[Python平台的redis
 
 下面我们以使用最广泛的[StackExchange.Redis](https://stackexchange.github.io/StackExchange.Redis/)为例讲解。
 
-
-### 3.3 连接Redis
+:::warning Redis 连接
+官方推荐在程序中建立单例 Redis 连接对象进行复用，而不像关系型数据库连接每次用完释放。
+:::
 
 ```csharp
 var redis = ConnectionMultiplexer.Connect("localhost:6379");//官方推荐重用Redis连接而不是每次用完释放
@@ -195,7 +82,7 @@ IDatabase db = redis.GetDatabase();//默认访问 db0 数据库,可以指定数�
 * 获取数据:`string s = db.StringGet("key")`如果查不到则返回 null
 * 参数、返回值 `RedisKey`、`RedisValue` 类型,进行了运算符重载,可以和 `string`、 `byte[]`之间进行隐式转换。
 
-### 3.4 Key操作
+### 3.4 Key
 Redis 里所有数据类型都是用 Key-Value 保存,因此 **Key 操作是针对所有数据类型**。
 
 方法|作用
@@ -245,7 +132,7 @@ RedisValue[] SetMembers(RedisKey key)|获取集合中的元素
 
 *SetContains,SetLength 会有并发问题*
 
-### 3.8 SortedSet
+### 3.8 SortedSet(ZSet)
 与Set相比SortedSet除了key,value外还提供了一个score字段记录数据记录的“分数”。如果对于数据遍历顺序有要求,可以使用 SortedSet,它会按照分数来进行遍历。**SortedSet也称 ZSet**。
 
 方法|作用
@@ -344,7 +231,120 @@ var guid = Guid.NewGuid().ToString();
 Redis.LockExecuteAsync(()=>Console.WriteLine("成功抢到锁"),"lockKey",guid);
 ```
 
-## 5. RedisHelper
+## 5. Redis 集群
+### 5.1 主从架构
+
+Redis可以配置`master-slave`模式来实现读写分离，数据备份和故障转移等功能。一般master节点用于写数据，而数据读取可以直接访问slave节点，slave节点数据默认只读。
+
+![Redis横向主从结构](../img/nosql/redis-master-slave-horizontal.jpg)
+
+master节点可以配置多slave节点，master的slave节点太多会增加主从同步资源开销,可以使用下面的拓扑结构减轻主节点推送的压力。
+
+![Redis纵向主从结构](../img/nosql/redis-master-slave-vertical.jpg)
+
+下面是一个“一主二从”的docker-compose示例。
+```yml
+version: '3.7'
+
+services:
+  redis-master:
+    image: redis:alpine
+    container_name: redis-master
+    command: redis-server --requirepass master_password
+    ports: 
+      - "6379:6379"
+    restart: always
+
+  redis-slave1:
+    image: redis:alpine
+    container_name: redis-slave1
+    command: redis-server --slaveof redis-master 6379 --masterauth master_password --port 6380 --requirepass slave_password
+    ports: 
+      - "6380:6380"
+    restart: always
+    depends_on:
+      - redis-master
+
+  redis-slave2:
+    image: redis:alpine
+    container_name: redis-slave2
+    command: redis-server --slaveof redis-master 6379 --masterauth master_password --port 6381 --requirepass slave_password
+    ports: 
+      - "6381:6381"
+    restart: always
+    depends_on:
+      - redis-master
+```
+
+主从结构中只需要修改slave节点配置文件，添加`slaveof`参数绑定主节点即可。或者我们可以使用docker-compose来快速搭建一个主从结构的Reids环境。
+
+主从架构中如果master节点出现故障，需要人工选择和修改slave节点配置升级其为新的master节点，无法实现高可用性。高可用(主从复制、主从切换)redis集群有两种方案，一种是redis-sentinel，只有一个master，各实例数据保持一致；一种是redis-cluster，也叫分布式redis集群，可以有多个master，数据分片分布在这些master上。
+
+> redis标准配置文件 [http://download.redis.io/redis-stable/redis.conf](http://download.redis.io/redis-stable/redis.conf)
+
+### 5.2 redis-sentinel
+
+哨兵机制(sentinel)可以在主节点出现故障时，由Redis Sentinel自动完成故障发现和转移，并通知应用方，实现高可用性。
+
+redis-sentinel作为独立的服务，用于管理多个redis实例，该系统主要执行以下四个任务：
+* 监控 (Monitor): 检查redis主、从实例是否正常运作
+* 通知 (Notification): 监控的redis服务出现问题时，可通过API发送通知告警
+* 自动故障迁移 (Automatic Failover): 当检测到redis主库不能正常工作时，redis-sentinel会开始做自动故障判断、迁移等操作，先是移除失效redis主服务，然后将其中一个从服务器升级为新的主服务器，并让失效主服务器的其他从服务器改为复制新的主服务器。当客户端试图连接失效的主服务器时，集群也会向客户端返回最新主服务器的地址，使得集群可以使用新的主服务器来代替失效服务器
+* 配置中心。sentinel启动时指定了mater节点，并可自动发现和动态更新slave节点。它可为应用程序提供集群中所有节点信息。
+
+我们只需要配置master节点即可，Sentinel会自动发现slave节点并动态更新配置。
+
+Redis至少使用三个Sentinel节点。sentinel.conf简单配置如下。
+```conf
+port 26379
+
+# bind to master node.the 'redis-service' is an alias.
+# redis-master 6379 is the address of master node
+# The quorum was set to the value of 2 (last argument of sentinel monitor configuration directive).
+sentinel monitor redis-service redis-master 6379 2
+
+# down-after-milliseconds value is 5000 milliseconds, that is 5 seconds, so masters will be detected as failing as soon as we don't receive any reply from our pings within this amount of time.
+sentinel down-after-milliseconds redis-service 5000
+
+sentinel failover-timeout redis-service 60000
+sentinel parallel-syncs redis-service 1
+
+sentinel auth-pass redis-service master_password
+```
+
+![Redis哨兵机制](../img/nosql/redis-sentinel.jpg)
+
+* Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
+* 应用程序与redis-sentinel集群交互示例参阅 [https://colin-chang.site/python/database/redis.html#_2-1-redis-sentinel](https://colin-chang.site/python/database/redis.html#_2-1-redis-sentinel)
+
+> 参考资料
+* Sentinel官方文档: [https://redis.io/topics/sentinel](https://redis.io/topics/sentinel)
+* 标准配置文件: [http://download.redis.io/redis-stable/sentinel.conf](http://download.redis.io/redis-stable/sentinel.conf)
+* [https://www.cnblogs.com/hckblogs/p/11186311.html](https://www.cnblogs.com/hckblogs/p/11186311.html)
+* [https://blog.51cto.com/8939110/2429771](https://blog.51cto.com/8939110/2429771)
+
+### 5.3 redis-cluster
+Redis3.0版本之前，可以通过Redis Sentinel来实现高可用，从3.0版本之后，官方推出了Redis Cluster，它的主要用途是实现数据分片(Data Sharding)，同样可以实现高可用，是官方当前推荐的方案。
+·
+redis cluster在设计的时候，就考虑到了去中⼼化，去中间件，集群中的每个节点都是平等的，每个节点都保存各⾃的数据和整个集群的状态。每个节点都和其他所有节点连接，⽽且这些连接保持活跃，保证只需要连接集群中任意节点，都可获取到其他节点的数据。
+
+![redis-cluster-slot](../img/nosql/redis-cluster.jpg)
+
+在Redis Sentinel模式中，每个节点需要保存全量数据，冗余比较多，而在Redis Cluster模式中，每个分片只需要保存一部分的数据。 Redis Cluster的具体实现细节是采用了Hash槽的概念，集群会预先分配16384个槽，并将这些槽分配给具体的服务节点，通过对Key进行CRC16(key)%16384运算得到对应的槽是哪一个，从而将读写操作转发到该槽所对应的服务节点。当有新的节点加入或者移除的时候，再来迁移这些槽以及其对应的数据。在这种设计之下，我们就可以很方便的进行动态扩容或缩容。
+
+Redis Cluster同样采用Master-Salve模式，写数据在master节点，它会与其对应的salve进⾏数据同步。当读取数据时，也根据⼀致性哈希算法到对应的master节点获取数据。当⼀个master挂掉之后，会自动切换其对应salve节点为新master节点。
+
+**redis-cluster要求至少3个主节点(否则在创建集群时会失败)**，并且当存活的主节点数⼩于总节点数的⼀半时，整个集群就⽆法提供服务了。
+
+* Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
+* 物理机搭建教程参阅 [https://www.cnblogs.com/wuxl360/p/5920330.html](https://www.cnblogs.com/wuxl360/p/5920330.html)
+* 应用程序与redis-cluster交互示例参阅 [https://colin-chang.site/python/database/redis.html#_2-2-redis-cluster](https://colin-chang.site/python/database/redis.html#_2-2-redis-cluster)
+
+> 参考资料 [官方文档](https://redis.io/topics/cluster-tutorial/)
+
+## 6. 应用程序交互
+> Python Redis交互请参阅 [https://colin-chang.site/python/database/redis.html](https://colin-chang.site/python/database/redis.html)。
+
 Redis的大部分常用操作都是相同的，这里我们基于`StackExchange.Redis`和`.Net Standard 2.0`封装一个帮助类。
 
 * 包含String,List,Set,SortedSet,Hash等常用数据类型操作。
@@ -367,3 +367,4 @@ Install-Package ColinChang.RedisHelper
 # .NET CLI
 dotnet add package ColinChang.RedisHelper
 ```
+
