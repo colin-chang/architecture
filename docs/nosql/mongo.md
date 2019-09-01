@@ -52,7 +52,7 @@ mongo:4
 
 ```sh
 # 连接本地MongoDB服务器
-mongo --port 27017 -u colin -p 123123
+mongo --port 27017 -u colin -p 123123 --authenticationDatabase admin
 
 # 执行mongo shell命令
 db
@@ -674,9 +674,177 @@ db.test.explain('executionStats').find({value:999999})
 
 ## 6. 安全管理
 ### 6.1 备份与恢复
-### 6.2 用户管理
+```js
+// 备份数据库
+// mongodump -h host -p port -d database -o output
+mongodump -h 192.168.0.200 -d db_test -o ~/mongobak
+
+// 恢复数据库
+//mongorestore -h host -p port -d database --dir input_directory
+mongorestore -h 192.168.0.200 -d db_test --dir ~/mongobak
+```
+### 6.2 权限管理
+MongoDB 使用 `role-user-database` 方式管理数据库权限。
+
+```sql
+show roles  // 查看所有角色
+show users  // 查看所有用户
+show dbs    // 查看所有数据库
+```
+
+常用系统角色|说明
+:-|:-
+`root`|超级管理员，默认数据库为`admin`
+`read`|允许用户读取指定数据库
+`readWrite`|允许用户读写指定数据库
+
+#### 6.2.1 创建管理员
+```js
+use admin
+db.createUser({
+    user:'admin',
+    pwd:'123',
+    roles:[{role:'root',db:'admin'}]
+})
+```
+
+#### 6.2.2 启用安全验证
+```sh
+# 修改配置文件。不同平台下配置文件路径可能不同
+sudo vi /etc/mongo/mongod.conf 
+
+# 添加以下内容。
+security:
+  authorization: enabled # 注意保留空格
+
+# 重启mongod
+sudo service mongod restart
+```
+
+#### 6.2.3 创建普通用户
+```js
+// 登录 admin
+mongo -u admin -p 123 --authenticationDatabase admin
+
+// 创建普通用户
+db.createUser({
+    user:'colin',
+    pwd:'123',
+    roles:[{role:'readWrite',db:'db_test'}]
+})
+
+```
+至此，即可使用`colin`登录，该用户有对`db_test`读写权限。
+
+#### 6.2.4 修改用户信息
+```js
+// 修改用户密码和角色
+db.updateUser('colin', {
+    pwd: '123123',
+    roles: [{
+        role: 'root',
+        db: 'admin'
+    }]
+})
+```
+
+::: warning Mongo in Docker
+使用docker容器运行 MongoDB ，创建容器时如果指定了用户名密码则意味着已经开启了安全验证，可以直接管理普通用户。
+:::
 
 ## 7. Mongo 集群
+### 7.1 副本集
+MongoDB支持多复本集群，集群可以实现故障自动迁移。故障时可以实现主从复本自动切换，故障恢复后可以实现数据自动恢复，确保服务高可用。
+
+需要注意的是至少有三个复本才能实现故障时主动自动切换。Master复本可读可写,Slave复本只读。主从复本可以自动进行数据同步。 
+
+### 7.2 集群搭建
+下面我们来演示一下使用 docker-compose 快速搭建一个一主二从的集群。
+
+#### 1) 启动服务集群
+三个mongo服务需要设置相同的`--replSet`选项即集群名称，这里设置集群名称为`rs_test`。
+```yml
+version: '3.7'
+
+services:
+  mongo1:
+    image: mongo
+    container_name: mongo1
+    ports:
+      - "27017:27017"
+    restart: always
+    command: mongod --replSet rs_test
+    networks:
+      - mongo-cluster
+
+  mongo2:
+    image: mongo
+    container_name: mongo2
+    ports:
+      - "27018:27017"
+    restart: always
+    command: mongod --replSet rs_test
+    networks:
+      - mongo-cluster
+
+  mongo3:
+    image: mongo
+    container_name: mongo3
+    ports:
+      - "27019:27017"
+    restart: always
+    command: mongod --replSet rs_test
+    networks:
+      - mongo-cluster
+
+networks:
+  mongo-cluster:
+    driver: bridge
+```
+
+
+```sh
+docker-compose up --build  # 启动服务集群
+```
+
+#### 2) 初始化主从配置
+第一次启动集群后需要进行主从初始化配置。
+
+通过任意客户端连接`master`和`slave`分别进行以下配置。
+
+```js
+// master 配置
+config = {
+    "_id" : "rs_test",
+    "members" : [
+        {"_id" : 0,"host" : "mongo1:27017"},
+        {"_id" : 1,"host" : "mongo2:27017"},
+        {"_id" : 2,"host" : "mongo3:27017"},
+    ]
+}
+
+rs.initiate(config)
+
+// slave 配置
+rs.slaveOk()
+```
+
+如果没有安装客户端可以直接使用容器内`mongo`客户端,假如我们选择`mongo1`为`master`。
+```sh
+# 打开mongo1 客户端
+docker exec -it mongo1 mongo 
+
+## 在此 执行上面的 master 配置即可
+```
+
+以上配置只是初始化配置(仅第一次)，如果之后集群Master复本发生故障，会自动选举新的Master实现主从自动切换。
+
+#### 3) 集群维护
+```js
+rs.add('192.168.0.200:27020')  // 添加复本
+
+rs.remove('192.168.0.200:27020')  // 删除复本
+```
 
 ## 8. 应用程序交互
 MongoDB 为各开发平台提供的对应Driver，用法类似。下面我们以.NET平台为例，使用官方提供的驱动包 [MongoDB.Driver](https://www.nuget.org/packages/MongoDB.Driver/)。目前版本为2.8.0，支持`.NETStandard 1.5`。
@@ -823,7 +991,7 @@ persons.UpdateMany(filter, update);
 ```
 
 ### 8.8 查询数据
-1) Count
+1）Count
 
 ```csharp
 //统计成年人总数
@@ -849,7 +1017,7 @@ using (var cursor = await persons.FindAsync<Person>(filter))
 
 如果确认返回的数据量不大,可以 `var ps = await personsCursor.ToListAsync()` (或 `ToEnumerable()`)一次返回所有数据。
 
-3) Sort
+3）Sort
 ```csharp
 var findOpt = new FindOptions<Person, Person>();
 findOpt.Sort = Builders<Person>.Sort.Ascending(p => p.Age).Descending(p => p.Name);//年龄生序，姓名降序
