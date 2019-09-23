@@ -19,7 +19,7 @@
     容器化的企业架构，基本可以通过少量重构完成微服务化，降低成本提高可用性。
 
 
-> [预览文档](https://architecture.colinchang.net/architecture/) https://architecture.colinchang.net
+> [预览文档](https://architecture.colinchang.net/) https://architecture.colinchang.net
 
 ```sh
 # 本地编译运行
