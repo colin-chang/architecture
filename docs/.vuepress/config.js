@@ -25,21 +25,21 @@ module.exports = {
                 text: 'Books',
                 items: [{
                         text: 'Python',
-                        link: 'https://colin-chang.site/python/'
+                        link: 'https://python.colinchang.net'
                     },
                     {
                         text: '.Net Core',
-                        link: 'https://colin-chang.site/netcore/'
+                        link: 'https://netcore.colinchang.net'
                     },
                     {
                         text: 'Linux',
-                        link: 'https://colin-chang.site/linux/'
+                        link: 'https://linux.colinchang.net'
                     }
                 ]
             },
             {
                 text: 'Blog',
-                link: 'https://colin-chang.site/'
+                link: 'https://colinchang.net/'
             }
         ],
         sidebar: [{

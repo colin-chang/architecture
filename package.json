@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/colin-chang/architecture/issues"
   },
-  "homepage": "https://colin-chang.site/books/architecture",
+  "homepage": "https://colinchang.net/books/architecture",
   "devDependencies": {
     "@vuepress/plugin-active-header-links": "^1.0.3",
     "@vuepress/plugin-back-to-top": "^1.0.3",
