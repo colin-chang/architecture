@@ -22,6 +22,6 @@
 > [预览文档](https://architecture.colinchang.net/) https://architecture.colinchang.net
 
 ```sh
-# 本地编译运行
+yarn add -D vuepress
 yarn dev
 ```
