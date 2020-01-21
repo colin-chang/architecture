@@ -1,7 +1,7 @@
 # 系统架构设计与优化实践
 
 <a src='https://architecture.ccstudio.org'>
-<img src='https://architecture.ccstudio.org/hero.png' width='450' />
+<img src='https://s2.ax1x.com/2020/01/21/1FRgaV.png' width='450' />
 </a>
 
 ## 拥抱云时代容器化微服务化系统架构
