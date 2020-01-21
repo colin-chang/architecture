@@ -5,7 +5,7 @@ module.exports = {
     head: [
         ['link', {
             rel: 'icon',
-            href: '/favicon.ico'
+            href: 'https://ccstudio.org/favicon.ico'
         }]
     ],
     plugins: [
