@@ -31,7 +31,7 @@ redis:alpine \
 --requirepass "password"
 ```
 
-在安装Redis时会同时安装服务端和客户端。服务端为`redis-server`客户端为`redis-cli`。可以使用客户端执行 Redis Shell 命令。需要了解 Redis Shell 的读者可以参阅 [redis driver for python](https://python.colinchang.net/database/redis.html) (接口与 Redis Shell 基本一致)。
+在安装Redis时会同时安装服务端和客户端。服务端为`redis-server`客户端为`redis-cli`。可以使用客户端执行 Redis Shell 命令。需要了解 Redis Shell 的读者可以参阅 [redis driver for python](https://python.ccstudio.org/database/redis.html) (接口与 Redis Shell 基本一致)。
 
 
 ```sh
@@ -45,7 +45,7 @@ get name # get a string value of name
 
 除了使用Redis提供的命令行客户端，我们也可以使用第三方GUI客户端，如[Redis Desktop Manager](https://github.com/uglide/RedisDesktopManager/)等。一般客户端软件也提供了Redis命令行。
 
-![Redis Desktop Manager](../img/nosql/redis-rdm.jpg)
+![Redis Desktop Manager](https://s2.ax1x.com/2020/01/21/1FuEm8.jpg)
 
 ## 3. Redis 数据类型
 ### 3.1 基础知识
@@ -173,7 +173,7 @@ CreateBatch()、Execute()之间的操作会一次性提交给Redis服务器。
 ### 4.2 发布订阅
 Redis 发布订阅(pub/sub)是一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。
 
-![Redis发布订阅示意图](../img/nosql/redis-pubsub.png)
+![Redis发布订阅示意图](https://s2.ax1x.com/2020/01/21/1FukOf.png)
 
 ```csharp
 //发布
@@ -236,11 +236,11 @@ Redis.LockExecuteAsync(()=>Console.WriteLine("成功抢到锁"),"lockKey",guid);
 
 Redis可以配置`master-slave`模式来实现读写分离，数据备份和故障转移等功能。一般master节点用于写数据，而数据读取可以直接访问slave节点，slave节点数据默认只读。
 
-![Redis横向主从结构](../img/nosql/redis-master-slave-horizontal.jpg)
+![Redis横向主从结构](https://s2.ax1x.com/2020/01/21/1FupYd.jpg)
 
 master节点可以配置多slave节点，master的slave节点太多会增加主从同步资源开销,可以使用下面的拓扑结构减轻主节点推送的压力。
 
-![Redis纵向主从结构](../img/nosql/redis-master-slave-vertical.jpg)
+![Redis纵向主从结构](https://s2.ax1x.com/2020/01/21/1Fu9fA.jpg)
 
 下面是一个“一主二从”的docker-compose示例。
 ```yml
@@ -312,10 +312,10 @@ sentinel parallel-syncs redis-service 1
 sentinel auth-pass redis-service master_password
 ```
 
-![Redis哨兵机制](../img/nosql/redis-sentinel.jpg)
+![Redis哨兵机制](https://s2.ax1x.com/2020/01/21/1FuV0S.jpg)
 
 * Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
-* 应用程序与redis-sentinel集群交互示例参阅 [https://python.colinchang.net/database/redis.html#_2-1-redis-sentinel](https://python.colinchang.net/database/redis.html#_2-1-redis-sentinel)
+* 应用程序与redis-sentinel集群交互示例参阅 [https://python.ccstudio.org/database/redis.html#_2-1-redis-sentinel](https://python.ccstudio.org/database/redis.html#_2-1-redis-sentinel)
 
 > 参考资料
 * Sentinel官方文档: [https://redis.io/topics/sentinel](https://redis.io/topics/sentinel)
@@ -328,7 +328,7 @@ Redis3.0版本之前，可以通过Redis Sentinel来实现高可用，从3.0版�
 ·
 redis cluster在设计的时候，就考虑到了去中⼼化，去中间件，集群中的每个节点都是平等的，每个节点都保存各⾃的数据和整个集群的状态。每个节点都和其他所有节点连接，⽽且这些连接保持活跃，保证只需要连接集群中任意节点，都可获取到其他节点的数据。
 
-![redis-cluster-slot](../img/nosql/redis-cluster.jpg)
+![redis-cluster-slot](https://s2.ax1x.com/2020/01/21/1FuF6P.jpg)
 
 在Redis Sentinel模式中，每个节点需要保存全量数据，冗余比较多，而在Redis Cluster模式中，每个分片只需要保存一部分的数据。 Redis Cluster的具体实现细节是采用了Hash槽的概念，集群会预先分配16384个槽，并将这些槽分配给具体的服务节点，通过对Key进行CRC16(key)%16384运算得到对应的槽是哪一个，从而将读写操作转发到该槽所对应的服务节点。当有新的节点加入或者移除的时候，再来迁移这些槽以及其对应的数据。在这种设计之下，我们就可以很方便的进行动态扩容或缩容。
 
@@ -338,12 +338,12 @@ Redis Cluster同样采用Master-Salve模式，写数据在master节点，它会�
 
 * Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
 * 物理机搭建教程参阅 [https://www.cnblogs.com/wuxl360/p/5920330.html](https://www.cnblogs.com/wuxl360/p/5920330.html)
-* 应用程序与redis-cluster交互示例参阅 [https://python.colinchang.net/database/redis.html#_2-2-redis-cluster](https://python.colinchang.net/database/redis.html#_2-2-redis-cluster)
+* 应用程序与redis-cluster交互示例参阅 [https://python.ccstudio.org/database/redis.html#_2-2-redis-cluster](https://python.ccstudio.org/database/redis.html#_2-2-redis-cluster)
 
 > 参考资料 [官方文档](https://redis.io/topics/cluster-tutorial/)
 
 ## 6. 应用程序交互
-> Python Redis交互请参阅 [https://python.colinchang.net/database/redis.html](https://python.colinchang.net/database/redis.html)。
+> Python Redis交互请参阅 [https://python.ccstudio.org/database/redis.html](https://python.ccstudio.org/database/redis.html)。
 
 Redis的大部分常用操作都是相同的，这里我们基于`StackExchange.Redis`和`.Net Standard 2.0`封装一个帮助类。
 

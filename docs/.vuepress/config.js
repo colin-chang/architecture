@@ -25,21 +25,21 @@ module.exports = {
                 text: 'Books',
                 items: [{
                         text: 'Python',
-                        link: 'https://python.colinchang.net'
+                        link: 'https://python.ccstudio.org'
                     },
                     {
                         text: '.Net Core',
-                        link: 'https://netcore.colinchang.net'
+                        link: 'https://netcore.ccstudio.org'
                     },
                     {
                         text: 'Linux',
-                        link: 'https://linux.colinchang.net'
+                        link: 'https://linux.ccstudio.org'
                     }
                 ]
             },
             {
                 text: 'Blog',
-                link: 'https://colinchang.net/'
+                link: 'https://ccstudio.org/'
             }
         ],
         sidebar: [{

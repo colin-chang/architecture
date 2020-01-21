@@ -17,7 +17,7 @@ sed -i "" "s/base: '\/architecture\/'/base: '\/'/g" docs/.vuepress/config.js
 npm run build
 sed -i "" "s/base: '\/'/base: '\/architecture\/'/g" docs/.vuepress/config.js
 cd docs/.vuepress/dist
-echo 'architecture.colinchang.net' > CNAME
+echo 'architecture.ccstudio.org' > CNAME
 git init
 git add -A
 git commit -m 'deploy'

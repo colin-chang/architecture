@@ -1,7 +1,7 @@
 # 系统架构设计与优化实践
 
-<a src='https://architecture.colinchang.net'>
-<img src='https://architecture.colinchang.net/hero.png' width='450' />
+<a src='https://architecture.ccstudio.org'>
+<img src='https://architecture.ccstudio.org/hero.png' width='450' />
 </a>
 
 ## 拥抱云时代容器化微服务化系统架构
@@ -19,7 +19,7 @@
     容器化的企业架构，基本可以通过少量重构完成微服务化，降低成本提高可用性。
 
 
-> [预览文档](https://architecture.colinchang.net/) https://architecture.colinchang.net
+> [预览文档](https://architecture.ccstudio.org/) https://architecture.ccstudio.org
 
 ```sh
 yarn add -D vuepress
