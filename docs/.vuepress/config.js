@@ -25,15 +25,15 @@ module.exports = {
                 text: 'Books',
                 items: [{
                         text: 'Python',
-                        link: 'https://python.ccstudio.org'
+                        link: 'https://ccstudio.org/python'
                     },
                     {
                         text: '.Net Core',
-                        link: 'https://netcore.ccstudio.org'
+                        link: 'https://ccstudio.org/netcore'
                     },
                     {
                         text: 'Linux',
-                        link: 'https://linux.ccstudio.org'
+                        link: 'https://ccstudio.org/linux'
                     }
                 ]
             },

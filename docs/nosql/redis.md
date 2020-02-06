@@ -31,7 +31,7 @@ redis:alpine \
 --requirepass "password"
 ```
 
-在安装Redis时会同时安装服务端和客户端。服务端为`redis-server`客户端为`redis-cli`。可以使用客户端执行 Redis Shell 命令。需要了解 Redis Shell 的读者可以参阅 [redis driver for python](https://python.ccstudio.org/database/redis.html) (接口与 Redis Shell 基本一致)。
+在安装Redis时会同时安装服务端和客户端。服务端为`redis-server`客户端为`redis-cli`。可以使用客户端执行 Redis Shell 命令。需要了解 Redis Shell 的读者可以参阅 [redis driver for python](https://ccstudio.org/python/database/redis.html) (接口与 Redis Shell 基本一致)。
 
 
 ```sh
@@ -315,7 +315,7 @@ sentinel auth-pass redis-service master_password
 ![Redis哨兵机制](https://s2.ax1x.com/2020/01/21/1FuV0S.jpg)
 
 * Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
-* 应用程序与redis-sentinel集群交互示例参阅 [https://python.ccstudio.org/database/redis.html#_2-1-redis-sentinel](https://python.ccstudio.org/database/redis.html#_2-1-redis-sentinel)
+* 应用程序与redis-sentinel集群交互示例参阅 [https://ccstudio.org/python/database/redis.html#_2-1-redis-sentinel](https://ccstudio.org/python/database/redis.html#_2-1-redis-sentinel)
 
 > 参考资料
 * Sentinel官方文档: [https://redis.io/topics/sentinel](https://redis.io/topics/sentinel)
@@ -338,12 +338,12 @@ Redis Cluster同样采用Master-Salve模式，写数据在master节点，它会�
 
 * Docker方式搭建推荐使用 [grokzen/redis-cluster](https://hub.docker.com/r/grokzen/redis-cluster)镜像。
 * 物理机搭建教程参阅 [https://www.cnblogs.com/wuxl360/p/5920330.html](https://www.cnblogs.com/wuxl360/p/5920330.html)
-* 应用程序与redis-cluster交互示例参阅 [https://python.ccstudio.org/database/redis.html#_2-2-redis-cluster](https://python.ccstudio.org/database/redis.html#_2-2-redis-cluster)
+* 应用程序与redis-cluster交互示例参阅 [https://ccstudio.org/python/database/redis.html#_2-2-redis-cluster](https://ccstudio.org/python/database/redis.html#_2-2-redis-cluster)
 
 > 参考资料 [官方文档](https://redis.io/topics/cluster-tutorial/)
 
 ## 6. 应用程序交互
-> Python Redis交互请参阅 [https://python.ccstudio.org/database/redis.html](https://python.ccstudio.org/database/redis.html)。
+> Python Redis交互请参阅 [https://ccstudio.org/python/database/redis.html](https://ccstudio.org/python/database/redis.html)。
 
 Redis的大部分常用操作都是相同的，这里我们基于`StackExchange.Redis`和`.Net Standard 2.0`封装一个帮助类。
 
