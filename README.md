@@ -1,6 +1,6 @@
 # 系统架构设计与优化实践
 
-<a src='https://architecture.ccstudio.org'>
+<a src='https://ccstudio.org/architecture'>
 <img src='https://s2.ax1x.com/2020/01/21/1FRgaV.png' width='450' />
 </a>
 
@@ -19,7 +19,7 @@
     容器化的企业架构，基本可以通过少量重构完成微服务化，降低成本提高可用性。
 
 
-> [预览文档](https://architecture.ccstudio.org/) https://architecture.ccstudio.org
+> [预览文档](https://ccstudio.org/architecture) https://ccstudio.org/architecture
 
 ```sh
 yarn add -D vuepress

@@ -13,11 +13,11 @@ cd -
 
 # Standalone
 rm -rf docs/.vuepress/dist
-sed -i "" "s/base: '\/architecture\/'/base: '\/'/g" docs/.vuepress/config.js
+# sed -i "" "s/base: '\/architecture\/'/base: '\/'/g" docs/.vuepress/config.js
 npm run build
-sed -i "" "s/base: '\/'/base: '\/architecture\/'/g" docs/.vuepress/config.js
+# sed -i "" "s/base: '\/'/base: '\/architecture\/'/g" docs/.vuepress/config.js
 cd docs/.vuepress/dist
-echo 'architecture.ccstudio.org' > CNAME
+# echo 'architecture.ccstudio.org' > CNAME
 git init
 git add -A
 git commit -m 'deploy'
