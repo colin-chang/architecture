@@ -5,7 +5,7 @@ module.exports = {
     head: [
         ['link', {
             rel: 'icon',
-            href: 'https://s2.ax1x.com/2020/02/08/1WBlon.png'
+            href: 'https://i.loli.net/2020/02/25/AOjBhkIxtb8dRgl.png'
         }]
     ],
     plugins: [

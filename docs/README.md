@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: https://s2.ax1x.com/2020/01/21/1FRgaV.png
+heroImage: https://i.loli.net/2020/02/25/42wjemItq6Xn8Wk.png
 heroText: 系统架构设计与优化实践
 tagline: 拥抱云时代容器化微服务化系统架构
 actionText: 快速了解 →

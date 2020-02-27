@@ -17,20 +17,20 @@ GitHub：https://github.com/exceptionless/Exceptionless
 ## 2. 简单使用
 #### 1) 注册账号
 首先，需要去官网注册一个帐号（打不开的同学你懂的），注册完成之后登录系统。
-![注册账号](https://s2.ax1x.com/2020/01/21/1FnxTe.png)
+![注册账号](https://i.loli.net/2020/02/25/UWvlZmKobYrIVgh.png)
 
 #### 2) 新建项目
 按照提示，添加一个项目。
 
-![新建项目](https://s2.ax1x.com/2020/01/21/1FnjeO.png)
+![新建项目](https://i.loli.net/2020/02/25/eQkFhyVWdrwlMHb.png)
 
 选择项目的类型，可以看到 Exceptionless支持很多种项目。我们来选择一个 ASP.NET Core 的项目。
 
-![选择项目类型](https://s2.ax1x.com/2020/01/21/1FnqQx.png)
+![选择项目类型](https://i.loli.net/2020/02/25/NwtLR8HKBZ1gcQS.png)
 
 完成后可以看到一个详细步骤说明如何在项目中集成。
 
-![nuget](https://s2.ax1x.com/2020/01/21/1FnvwD.png)
+![nuget](https://i.loli.net/2020/02/25/hD1c2lbYJK4wRqz.png)
 
 #### 3) 项目集成
 * 首先，使用 NuGet 添加一个包，名字叫`Exceptionless.AspNetCore`。
@@ -61,12 +61,12 @@ public IActionResult About()
 ```
 接下来，刷新 Exceptionless的页面，在 Dashboard 主面板中，可以看到关于整个项目的一个异常情况，并且分别以几种方式列了出来，其中包括分布图，最频繁的异常，最近的异常等等。
 
-![Exceptionless控制台](https://s2.ax1x.com/2020/01/21/1FuSFH.png)
+![Exceptionless控制台](https://i.loli.net/2020/02/25/UuIVhtvCGTesZnq.png)
 
 这个我们刚才在Abount Action中制造的一个异常，Exceptionless已经记录了下来，点进去之后可以看一下详情。
 
-![异常总揽](https://s2.ax1x.com/2020/01/21/1FnLy6.png)
-![异常详情](https://s2.ax1x.com/2020/01/21/1FnOOK.png)
+![异常总揽](https://i.loli.net/2020/02/25/QukSHIMOJYn3AVy.png)
+![异常详情](https://i.loli.net/2020/02/25/JZGabQRoCNv4zqn.png)
 
 除了一些基本的异常类型、时间和堆栈外，Request和Enviroment中还包括访问者的坐标、IP地址、发生异常的URL地址、浏览器信息，操作系统、甚至发生异常时请求的Cookie值。
 

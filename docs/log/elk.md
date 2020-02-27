@@ -29,7 +29,7 @@ $ git clone https://github.com/colin-chang/ELK.Stack.git && cd ELK.Stack
 
 ### 2.2 Logstash Configuration
 如前面提到Logstash可以搜集、分析、过滤日志，我们可以按需定制 logstash pipeline,其包含两个必须的元素input和output，和一个可选元素filter。
-![logstash pipeline](https://s2.ax1x.com/2020/01/20/1ivyTS.png)
+![logstash pipeline](https://i.loli.net/2020/02/25/z2Of6jNIFBK1Awi.png)
 
 input负责日志采集，output负责日志输出，而filter则负责日志分析和过滤。
 
@@ -61,7 +61,7 @@ FATAL#Xiaoyang.EmotionAnalyze.Program#Xiaoyang.EmotionAnalyze.Program.RunThrift 
 
 我们通过使用[Grok Debugger(Pattern填写正则即可)](http://grokdebug.herokuapp.com/)来快速测试匹配结果。
 
-![Grok Debugger](https://s2.ax1x.com/2020/01/21/1Fn7WR.jpg)
+![Grok Debugger](https://i.loli.net/2020/02/25/j85x9BITSrP4uap.jpg)
 
 
 更多logstash配置详解，可以参阅 
@@ -141,8 +141,8 @@ $ docker-compose down
 ## 4. 查看日志
 访问Kibana地址http://127.0.0.1:5601，
 
-![Kibana创建索引](https://s2.ax1x.com/2020/01/20/1ivcFg.jpg)
+![Kibana创建索引](https://i.loli.net/2020/02/25/iC1EYAWF7lX4nGD.jpg)
 
 根据`Logstash pipeline > output` 设置的`index`参数创建检索参数后即可检索相关日志。
 
-![Kibana查看日志](https://s2.ax1x.com/2020/01/21/1FnbS1.jpg)
+![Kibana查看日志](https://i.loli.net/2020/02/25/GHLhx5roQMWd1nB.jpg)

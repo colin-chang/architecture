@@ -63,7 +63,7 @@ db.students.find()
 
 除了使用Mongo提供的命令行客户端，我们也可以使用第三方GUI客户端，如如Navicat,[Robo 3T](https://robomongo.org/)等。一般客户端软件都提供了Mongo Shell。
 
-![Robo 3T](https://s2.ax1x.com/2020/01/21/1FuZTg.png)
+![Robo 3T](https://i.loli.net/2020/02/25/AVYwFPEiMzRG7Nd.png)
 
 ## 3. Mongo 数据类型
 数据类型|说明
@@ -88,7 +88,7 @@ MongoDB 中存储的文档必须有一个 `_id` 键。这个键的值可以是�
 * 紧接的两个字节为PID
 * 最后三个字节是随机数
 
-![ObjectId结构组成](https://s2.ax1x.com/2020/01/21/1FuPSI.jpg)
+![ObjectId结构组成](https://i.loli.net/2020/02/25/7e38cR9brLJU6Ai.jpg)
 
 **ObjectId 中保存了创建的时间戳，所以文档中不需要保存时间戳字段**。可以使用`getTimestamp()`来获取时间。
 
@@ -961,7 +961,7 @@ await persons.InsertManyAsync(ps);
 
 MongoDB 默认用 id 做主键,因此不用显式指定 id 是主键。MongoDB 中没有内置“自增字段”，如果插入对象没有Id属性或者把 Id 声明为`ObjectId`类型这样插入以后自动给字段赋值。
 
-![mongo数据格式](https://s2.ax1x.com/2020/01/21/1Fuilt.jpg)
+![mongo数据格式](https://i.loli.net/2020/02/25/DqafHm9PxhGKJQk.jpg)
 
 ```csharp
 //json数据插入
