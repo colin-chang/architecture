@@ -29,7 +29,7 @@ module.exports = {
                     },
                     {
                         text: '.Net Core',
-                        link: 'https://ccstudio.org/netcore'
+                        link: 'https://ccstudio.org/dotnet'
                     },
                     {
                         text: 'Linux',

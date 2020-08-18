@@ -21,5 +21,5 @@ cd docs/.vuepress/dist
 git init
 git add -A
 git commit -m 'deploy'
-git push -f git@github.com:colin-chang/architecture.git master:standalone
+git push -f git@github.com:colin-chang/architecture.git master:gh-pages
 cd -
