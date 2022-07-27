@@ -1,7 +1,7 @@
 module.exports = {
     title: '系统架构设计与优化',
     description: '拥抱云时代容器化微服务化系统架构',
-    base: '/architecture/',
+    base: '/',
     head: [
         ['link', {
             rel: 'icon',
