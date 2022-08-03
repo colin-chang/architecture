@@ -25,21 +25,21 @@ module.exports = {
                 text: 'Books',
                 items: [{
                         text: 'Python',
-                        link: 'https://ccstudio.org/python'
+                        link: 'https://python.a-nomad.com'
                     },
                     {
                         text: '.Net Core',
-                        link: 'https://ccstudio.org/dotnet'
+                        link: 'https://dotnet.a-nomad.com'
                     },
                     {
                         text: 'Linux',
-                        link: 'https://ccstudio.org/linux'
+                        link: 'https://linux.a-nomad.com'
                     }
                 ]
             },
             {
                 text: 'Blog',
-                link: 'https://ccstudio.org/'
+                link: 'https://a-nomad.org/'
             }
         ],
         sidebar: [{
