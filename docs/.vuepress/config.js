@@ -28,7 +28,7 @@ module.exports = {
                         link: 'https://python.a-nomad.com'
                     },
                     {
-                        text: '.Net Core',
+                        text: '.Net',
                         link: 'https://dotnet.a-nomad.com'
                     },
                     {

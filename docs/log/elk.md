@@ -135,7 +135,7 @@ $ docker-compose down
 * **Rules**
   详细Rules配置参阅 https://github.com/NLog/NLog/wiki/Configuration-file#rules
 
-`.NET Core + NLog + ELK` 的完整[**使用案例**](https://github.com/colin-chang/ELK.Sample)已分享到 https://github.com/colin-chang/ELK.Sample
+`.NET + NLog + ELK` 的完整[**使用案例**](https://github.com/colin-chang/ELK.Sample)已分享到 https://github.com/colin-chang/ELK.Sample
 
 
 ## 4. 查看日志

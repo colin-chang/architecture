@@ -58,7 +58,7 @@ get name # get a string value of name
 ### 3.2 Redis Driver
 Redis作为流行的内NoSQL内存数据库，各主流平台都提供了相应的Driver，下面我们以.Net平台为例，其他平台基本类似。
 
-.NET Core平台下，ServiceStack.Redis 是商业版，免费版有限制。StackExchange.Redis 2.0之前版本有超时问题，现已解决。除了这两个传统的库之外，国内大牛也开了一些优秀的高性能.Net Core的Redis组件，供我们选择。
+.NET平台下，ServiceStack.Redis 是商业版，免费版有限制。StackExchange.Redis 2.0之前版本有超时问题，现已解决。除了这两个传统的库之外，国内大牛也开了一些优秀的高性能.Net的Redis组件，供我们选择。
 
 * [NewLife.Redis](http://git.newlifex.com/NewLife/NewLife.Redis) 他是NewLife团队开发的，已经在ZTO大数据实时计算中广泛应用，200多个Redis实例稳定工作一年多，每天处理近1亿包裹数据，日均调用量80亿次。
 * [CSRedis](https://github.com/2881099/csredis) (这里我更喜欢把它叫做CSRedisCore)这是另一个国内大牛nicye 开发的，为人很低调，所以了解他的人很少！目前我项目中广泛使用的也是这个。作者前不久刚做了一个几大Redis组件的性能测试.net core 2.0 redis驱动性能比拼 有兴趣的可以打开链接看一下。
