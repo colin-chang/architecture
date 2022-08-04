@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "分布式系统架构设计",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs"
