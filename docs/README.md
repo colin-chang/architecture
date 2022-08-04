@@ -13,5 +13,8 @@ features:
   details: 以Docker为代表的容器化技术大潮席卷整个互联网行业。
 - title: 微服务化
   details: 容器化的企业架构，基本可以通过少量重构完成微服务化，降低成本提高可用性。
-footer: Copyright © Colin Blog 2018
 ---
+
+::: slot footer
+MIT Licensed | Copyright © [A-Nomad](https://a-nomad.com) 2018
+:::

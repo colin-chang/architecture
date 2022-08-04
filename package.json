@@ -10,7 +10,7 @@
     "dev": "vuepress dev docs",
     "build": "vuepress build docs"
   },
-  "repository": "git+https://github.com/colin-chang/architecture.git",
+  "repository": "https://github.com/colin-chang/architecture",
   "author": "Colin Chang",
   "license": "ISC",
   "bugs": {
@@ -18,12 +18,11 @@
   },
   "homepage": "https://architecture.a-nomad.com",
   "devDependencies": {
-    "@vuepress/plugin-active-header-links": "^1.0.3",
-    "@vuepress/plugin-back-to-top": "^1.0.3",
-    "@vuepress/plugin-google-analytics": "^1.0.3",
-    "vuepress": "^1.9.7"
-  },
-  "dependencies": {
+    "@vuepress/plugin-active-header-links": "^1.9.7",
+    "@vuepress/plugin-back-to-top": "^1.9.7",
+    "@vuepress/plugin-google-analytics": "^1.9.7",
+    "@vuepress/plugin-medium-zoom": "^1.9.7",
+    "vuepress": "^1.9.7",
     "watchman": "^1.0.0"
   }
 }
