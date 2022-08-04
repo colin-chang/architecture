@@ -5,7 +5,7 @@ module.exports = {
     head: [
         ['link', {
             rel: 'icon',
-            href: 'https://i.loli.net/2020/02/25/AOjBhkIxtb8dRgl.png'
+            href: 'https://cdn.hashnode.com/res/hashnode/image/upload/v1658902565243/IDyIb_63A.png'
         }]
     ],
     plugins: [
@@ -39,7 +39,7 @@ module.exports = {
             },
             {
                 text: 'Blog',
-                link: 'https://a-nomad.org/'
+                link: 'https://a-nomad.com/'
             }
         ],
         sidebar: [{
