@@ -21,6 +21,12 @@ module.exports = {
         logo:'https://s2.loli.net/2022/08/04/UXqgLBVfzPuvb5A.png',
         repo: 'https://github.com/colin-chang/architecture',
         smoothScroll:true,
+        search: false,
+        algolia: {
+            apiKey: '0b50b5acae02c9ea945e9c1e2a8fc88e',
+            indexName: 'architecture-nomad',
+            appId: 'CQMRGXO6ON'
+        },
         nav: [{
                 text: 'Get Start',
                 link: '/architecture/intro'
